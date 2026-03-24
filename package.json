@@ -1,0 +1,17 @@
+{
+  "name": "blockchain-trade-system",
+  "version": "1.0.0",
+  "description": "Blockchain-based Trade System",
+  "scripts": {
+    "compile":        "hardhat compile",
+    "node":           "hardhat node",
+    "deploy:local":   "hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "test":           "hardhat test",
+    "clean":          "hardhat clean"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.19.0"
+  }
+}

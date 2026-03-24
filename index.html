@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BlockChain Trade System</title>
+  <meta name="description" content="Blockchain-based trade management system with 3 roles: Manufacturer, Retailer, Customer."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* Landing-page specific styles */
+    .landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      gap: 3rem;
+    }
+    .landing-hero { text-align: center; }
+    .landing-logo {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; margin-bottom: 1.5rem;
+    }
+    .landing-logo span {
+      font-size: 1.5rem; font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #3ecfcf);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .landing-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, #1e293b 30%, #475569);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    .landing-hero p {
+      font-size: 1.1rem; color: var(--text-secondary);
+      max-width: 520px; margin: 0 auto;
+    }
+    .role-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 960px;
+    }
+    .role-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem 1.75rem;
+      display: flex; flex-direction: column;
+      align-items: flex-start; gap: 1rem;
+      text-decoration: none;
+      transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .role-card::before {
+      content: ''; position: absolute; inset: 0;
+      opacity: 0; transition: opacity 0.28s;
+    }
+    .role-card:hover { transform: translateY(-6px); }
+    .role-card:hover::before { opacity: 1; }
+
+    .role-card.manufacturer { border-color: rgba(108,99,255,0.3); }
+    .role-card.manufacturer:hover { box-shadow: 0 20px 60px rgba(108,99,255,0.2); border-color: rgba(108,99,255,0.6); }
+    .role-card.manufacturer::before { background: radial-gradient(ellipse at top left, rgba(108,99,255,0.06), transparent 60%); }
+
+    .role-card.retailer { border-color: rgba(62,207,207,0.3); }
+    .role-card.retailer:hover { box-shadow: 0 20px 60px rgba(62,207,207,0.2); border-color: rgba(62,207,207,0.6); }
+    .role-card.retailer::before { background: radial-gradient(ellipse at top left, rgba(62,207,207,0.06), transparent 60%); }
+
+    .role-card.customer { border-color: rgba(245,158,11,0.3); }
+    .role-card.customer:hover { box-shadow: 0 20px 60px rgba(245,158,11,0.2); border-color: rgba(245,158,11,0.6); }
+    .role-card.customer::before { background: radial-gradient(ellipse at top left, rgba(245,158,11,0.06), transparent 60%); }
+
+    .role-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: grid; place-items: center; font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+    .manufacturer .role-icon { background: rgba(108,99,255,0.15); }
+    .retailer     .role-icon { background: rgba(62,207,207,0.15); }
+    .customer     .role-icon { background: rgba(245,158,11,0.15); }
+
+    .role-label {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem; border-radius: 100px;
+    }
+    .manufacturer .role-label { background: rgba(108,99,255,0.15); color: #8b84ff; }
+    .retailer     .role-label { background: rgba(62,207,207,0.15); color: #3ecfcf; }
+    .customer     .role-label { background: rgba(245,158,11,0.15); color: #f59e0b; }
+
+    .role-card h2 { font-size: 1.35rem; font-weight: 800; color: var(--text-primary); }
+    .role-card p  { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+
+    .role-features {
+      list-style: none; display: flex; flex-direction: column; gap: 0.4rem;
+      width: 100%;
+    }
+    .role-features li {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    .role-features li::before {
+      content: "✓"; font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .manufacturer .role-features li::before { color: #8b84ff; }
+    .retailer     .role-features li::before { color: #3ecfcf; }
+    .customer     .role-features li::before { color: #f59e0b; }
+
+    .role-enter-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      width: 100%;
+      justify-content: center;
+      padding: 0.75rem;
+      border-radius: var(--radius-md);
+      font-weight: 700; font-size: 0.875rem;
+      border: none; cursor: pointer;
+      transition: all 0.22s;
+      margin-top: 0.5rem;
+    }
+    .manufacturer .role-enter-btn { background: rgba(108,99,255,0.2); color: #8b84ff; }
+    .manufacturer .role-enter-btn:hover { background: rgba(108,99,255,0.35); }
+    .retailer .role-enter-btn { background: rgba(62,207,207,0.2); color: #3ecfcf; }
+    .retailer .role-enter-btn:hover { background: rgba(62,207,207,0.35); }
+    .customer .role-enter-btn { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .customer .role-enter-btn:hover { background: rgba(245,158,11,0.35); }
+
+    .landing-footer {
+      color: var(--text-muted); font-size: 0.78rem; text-align: center;
+    }
+    .landing-footer code {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem;
+      border-radius: 4px; color: var(--accent-secondary);
+    }
+
+    .chain-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.22);
+      border-radius: 100px; padding: 0.4rem 1rem;
+      font-size: 0.78rem; color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .chain-badge-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-success);
+      box-shadow: 0 0 6px var(--accent-success);
+      animation: pulse 2s infinite;
+    }
+
+    @media (max-width: 768px) {
+      .role-cards { grid-template-columns: 1fr; max-width: 400px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="landing">
+
+    <div class="landing-hero">
+      <div class="landing-logo">
+        <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
+          <polygon points="16,2 30,10 30,22 16,30 2,22 2,10" fill="url(#g1)" opacity=".9"/>
+          <polygon points="16,8 24,13 24,20 16,25 8,20 8,13" fill="none" stroke="#fff" stroke-width="1.2"/>
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6c63ff"/>
+              <stop offset="100%" stop-color="#3ecfcf"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>BlockChain Trade</span>
+      </div>
+
+      <div class="chain-badge">
+        <div class="chain-badge-dot"></div>
+        Ethereum · Sepolia Testnet · Trading System
+      </div>
+
+      <h1>Decentralized<br/>Trade Platform</h1>
+      <p>A blockchain-based system for tracking products from manufacturer to retailer to customer — with full ownership history.</p>
+    </div>
+
+    <!-- Role Selection Cards -->
+    <div class="role-cards">
+
+      <!-- Manufacturer -->
+      <a class="role-card manufacturer" href="manufacturer.html">
+        <div style="display:flex;align-items:center;gap:.75rem;width:100%">
+          <div class="role-icon">🏭</div>
+          <span class="role-label">Role 1</span>
+        </div>
+        <h2>Manufacturer</h2>
+        <p>Create and register products on the blockchain. Transfer products to retailers and track the full product lifecycle.</p>
+        <ul class="role-features">
+          <li>Register products on-chain</li>
+          <li>Transfer to retailers</li>
+          <li>Verify product authenticity</li>
+          <li>View ownership history</li>
+        </ul>
+        <button class="role-enter-btn">
+          Enter Dashboard
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </a>
+
+      <!-- Retailer -->
+      <a class="role-card retailer" href="retailer.html">
+        <div style="display:flex;align-items:center;gap:.75rem;width:100%">
+          <div class="role-icon">🏪</div>
+          <span class="role-label">Role 2</span>
+        </div>
+        <h2>Retailer</h2>
+        <p>Receive products from manufacturers. Sell and transfer products to customers with full blockchain traceability.</p>
+        <ul class="role-features">
+          <li>View received inventory</li>
+          <li>Transfer to customers</li>
+          <li>Verify product authenticity</li>
+          <li>Trace ownership history</li>
+        </ul>
+        <button class="role-enter-btn">
+          Enter Dashboard
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </a>
+
+      <!-- Customer -->
+      <a class="role-card customer" href="customer.html">
+        <div style="display:flex;align-items:center;gap:.75rem;width:100%">
+          <div class="role-icon">👤</div>
+          <span class="role-label">Role 3</span>
+        </div>
+        <h2>Customer</h2>
+        <p>View products you own and verify product authenticity by looking up any product ID on-chain.</p>
+        <ul class="role-features">
+          <li>View owned products</li>
+          <li>Verify product by ID</li>
+          <li>Full ownership history</li>
+          <li>Transparent provenance</li>
+        </ul>
+        <button class="role-enter-btn">
+          Enter Dashboard
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </a>
+
+    </div>
+
+    <div class="landing-footer">
+      Contract deployed on Sepolia at <code>0xbda59E6a3F…172b4</code> &nbsp;·&nbsp; Powered by Ethereum &amp; Ethers.js v5
+    </div>
+
+  </main>
+</body>
+</html>
